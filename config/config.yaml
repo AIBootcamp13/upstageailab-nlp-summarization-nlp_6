@@ -1,0 +1,169 @@
+# config/config.yaml
+
+# General settings
+project_dir: "./"
+test_mode: False
+data_dir: "data/"
+output_dir: "results/"
+logging_dir: "logs/"
+seed: 42
+
+# Model & Tokenizer settings
+model:
+  # 'bart', 't5', 'pegasus', 'led', 'prophetnet' 중 하나를 선택하세요.
+  type: "koalpaca-llm"
+  
+ # 모델 타입별 상세 설정
+  architectures:
+    koalpaca-llm:
+      name: "beomi/KoAlpaca-Polyglot-12.8B"
+      # ✨ Causal LM은 프롬프트로 작업을 지시하므로 prefix는 비워둡니다.
+      prefix: "" 
+      lora:
+        r: 16 # 더 큰 모델이므로 r 값을 조금 더 높게 설정
+        lora_alpha: 32
+        # ✨ Causal LM 아키텍처에 맞는 target_modules 설정
+        target_modules: 
+          - "query_key_value"
+          - "dense"
+          - "dense_h_to_4h"
+          - "dense_4h_to_h"
+
+    bart-summary:
+      name: "gogamza/kobart-summarization"
+      prefix: ""
+      # BART 모델에 특화된 LoRA 설정
+      lora:
+        r: 8
+        lora_alpha: 16
+        target_modules: ["q_proj", "v_proj"]
+
+    t5-keti:
+      name: "KETI-AIR/ke-t5-base-ko"
+      prefix: "summarize: "
+      lora:
+        r: 8
+        lora_alpha: 16
+        target_modules: ["q", "v"]
+
+    t5-pko:
+      name: "paust/pko-t5-base"
+      prefix: "summarize: "
+      lora:
+        r: 8
+        lora_alpha: 16
+        target_modules: ["q", "v"]
+    
+    t5-summary:
+      name: "eenzeenee/t5-small-korean-summarization"
+      prefix: "summarize: "
+      # T5 모델에 특화된 LoRA 설정 (다른 r, alpha, target_modules 사용)
+      lora:
+        r: 4
+        lora_alpha: 8
+        target_modules: ["q", "v"]
+
+    bart-summary-v2:
+      name: "gangyeolkim/kobart-korean-summarizer-v2"
+      prefix: ""
+      lora:
+        r: 8
+        lora_alpha: 16
+        target_modules: ["q_proj", "v_proj"]
+
+    bart:
+      # BART-base (가벼운 모델)
+      name: "facebook/bart-base"
+      prefix: ""
+    bart-summary-r3f:
+      name: "alaggung/bart-r3f"
+      prefix: ""
+    bart-baseline:
+      name: "digit82/kobart-summarization"
+      prefix: ""
+      lora:
+        r: 8
+        lora_alpha: 16
+        target_modules: ["q_proj", "v_proj"]
+    t5:
+      # T5-base
+      name: "t5-base"
+      prefix: "summarize: "
+      lora:
+        r: 4
+        lora_alpha: 8
+        target_modules: ["q", "v"]
+    pegasus:
+      # Pegasus-xsum (XSum 데이터셋에 파인튜닝된 모델)
+      name: "google/pegasus-xsum"
+      prefix: ""
+      lora:
+        r: 8
+        lora_alpha: 32
+        target_modules: ["q_proj", "v_proj"]
+    led:
+      # LED-base-16384
+      name: "allenai/led-base-16384"
+      prefix: ""
+    prophetnet:
+      # ProphetNet-large-uncased
+      name: "microsoft/prophetnet-large-uncased"
+      prefix: ""
+
+  encoder_max_len: 2048
+  decoder_max_len: 256
+  special_tokens: ['#Person1#', '#Person2#', '#Person3#', '#PhoneNumber#', '#Address#', '#PassportNumber#']
+
+# Training settings
+training:
+  num_train_epochs: 5
+  learning_rate: 2.0e-05
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 16
+  eval_accumulation_steps: 8
+  warmup_ratio: 0.03
+  weight_decay: 0.01
+  lr_scheduler_type: 'cosine'
+  optim: 'paged_adamw_32bit'
+  eval_strategy: 'steps'
+  eval_steps: 500
+  save_strategy: 'steps'
+  save_steps: 500
+  save_total_limit: 5
+  gradient_checkpointing: True
+  fp16: True
+  load_best_model_at_end: True
+  predict_with_generate: True
+  generation_max_length: 128
+  do_train: True
+  do_eval: True
+  early_stopping_patience: 5
+  early_stopping_threshold: 0.0
+  report_to: "none" # wandb 기록하고 싶으면 wandb 넣고 안하고 싶으면 none 넣기
+
+# LoRA 공통 설정 (모델별 설정이 없을 경우 기본값으로 사용)
+lora:
+  use_lora: True  # <-- LoRA 사용 여부를 제어하는 스위치
+  r: 4
+  lora_alpha: 8
+  lora_dropout: 0.05
+
+# Inference, W&B, GPT-4 설정은 기존과 동일
+inference:
+  checkpoint_path: "results/best_model"
+  result_path: "submission/"
+  no_repeat_ngram_size: 2
+  early_stopping: True
+  num_beams: 4
+  batch_size: 32
+  generate_max_length: 100
+  remove_tokens: ['<usr>', '<s>', '</s>', '<pad>']
+
+wandb:
+  project: "Dialogue Summarization"
+  name: "" 
+
+gpt4:
+  api_key: "YOUR_OPENAI_API_KEY"
+  model_name: "gpt-4-turbo"
