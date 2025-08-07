@@ -11,7 +11,15 @@
 - _Write Development environment_
 
 ### Requirements
-- _Write Requirements_
+- pandas==2.1.4
+- numpy==1.23.5
+- wandb==0.16.1
+- tqdm==4.66.1
+- pytorch_lightning==2.1.2
+- transformers[torch]==4.35.2
+- rouge==1.0.1
+- jupyter==1.0.0
+- jupyterlab==4.0.9
 
 ## 1. Competiton Info
 
@@ -33,6 +41,32 @@
 ```
 ├── code
 │   ├── baseline.ipynb
+│   ├── requirements.txt
+│   ├── augment.py
+│   ├── augment_back_translation.py
+│   ├── analyze_augmentation.py
+│   ├── baseline_advanced.ipynb
+│   ├── solar_api.ipynb
+│   ├── config.yaml
+├── data
+│   ├── augmented_google_ko-en-ko_10pct_20250803_182157
+├── model_output
+│   ├── digit82_kobart-summarization_20250805_103735
+│   ├── digit82_kobart-summarization_20250805_103807
+│   ├── digit82_kobart-summarization_20250805_134146
+│   ├── digit82_kobart-summarization_20250805_134857
+├── outputs
+│   ├── checkpoint-500
+│   ├── checkpoint-1000
+│   ├── checkpoint-1500
+│   ├── checkpoint-2000
+│   ├── checkpoint-2500
+│   ├── checkpoint-3000
+│   ├── checkpoint-3500
+│   ├── checkpoint-4000
+├── pipeline
+├── prediction
+├── utils
 ```
 
 ## 3. Data descrption

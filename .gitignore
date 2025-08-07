@@ -230,6 +230,7 @@ output/
 outputs/
 submission/
 prediction/
+model_output/
 logs/
 *.log
 *.tmp
