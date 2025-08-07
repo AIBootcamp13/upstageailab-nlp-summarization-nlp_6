@@ -48,68 +48,76 @@
 │   ├── baseline_advanced.ipynb
 │   ├── solar_api.ipynb
 │   ├── config.yaml
-├── data
-│   ├── augmented_google_ko-en-ko_10pct_20250803_182157
-├── model_output
-│   ├── digit82_kobart-summarization_20250805_103735
-│   ├── digit82_kobart-summarization_20250805_103807
-│   ├── digit82_kobart-summarization_20250805_134146
-│   ├── digit82_kobart-summarization_20250805_134857
-├── outputs
-│   ├── checkpoint-500
-│   ├── checkpoint-1000
-│   ├── checkpoint-1500
-│   ├── checkpoint-2000
-│   ├── checkpoint-2500
-│   ├── checkpoint-3000
-│   ├── checkpoint-3500
-│   ├── checkpoint-4000
-├── pipeline
-├── prediction
-├── utils
 ```
 
 ## 3. Data descrption
 
 ### Dataset overview
 
-- _Explain using data_
+[대회 데이터셋 License]
+
+- DialogSum Dataset: CC BY-NC-SA 4.0 license
+
+- 단, 해당 데이터을 한국어로 번역하여 활용
+
+- 원본: [사이트](https://github.com/cylnlp/dialogsum)
 
 ### EDA
 
-- _Describe your EDA process and step-by-step conclusion_
+- 개인 정보 마스킹 스페셜 토큰 확인
+```bash
+전화번호 → #PhoneNumber#
+주소 → #Address#
+생년월일 → #DateOfBirth#
+여권번호 → #PassportNumber#
+사회보장번호 → #SSN#
+신용카드 번호 → #CardNumber#
+차량 번호 → #CarNumber#
+이메일 주소 → #Email
+```
+
+- 원본 데이터 워드 클라우드 결과
+![원본 대화 내용](./readme_data/original_dialogue_wordcloud.png)
+![원본 요약문 내용](./readme_data/original_summary_wordcloud.png)
 
 ### Data Processing
 
-- _Describe data processing process (e.g. Data Labeling, Data Cleaning..)_
+- 데이터 증강 적용
+    - 구글 번역 api로 번역 진행, 한 -> 영 -> 한, 한 -> 영 -> 일 -> 한, 한 -> 일 -> 한 이런식으로 변역한 것들을 데이터 증강
+- \n 와 같은 테크들 제거
+- 너무 많은 화자를 2명으로 제한
+- AEDA 시도
+
+
+
 
 ## 4. Modeling
 
 ### Model descrition
 
-- _Write model information and why your select this model_
+- 실험 모델
+    - beomi/KoAlpaca-Polyglot-12.8B
+    - gogamza/kobart-summarization
+    - KETI-AIR/ke-t5-base-ko
+    - paust/pko-t5-base
+    - eenzeenee/t5-small-korean-summarization
+    - gangyeolkim/kobart-korean-summarizer-v2
+    - facebook/bart-base
+    - alaggung/bart-r3f
+    - digit82/kobart-summarization
+    - t5-base
+    - google/pegasus-xsum
+    - allenai/led-base-16384
+    - microsoft/prophetnet-large-uncased
+    - unsloth/Qwen3-4B-Base
 
 ### Modeling Process
 
-- _Write model train and test process with capture_
+- 다양한 모델을 사용해 보았지만, 결국 베이스라인으로 제공된 모델의 성능을 넘지 못했음
+- 
 
 ## 5. Result
 
 ### Leader Board
 
-- _Insert Leader Board Capture_
-- _Write rank and score_
-
-### Presentation
-
-- _Insert your presentaion file(pdf) link_
-
-## etc
-
-### Meeting Log
-
-- _Insert your meeting log link like Notion or Google Docs_
-
-### Reference
-
-- _Insert related reference_
+![리터보드](./readme_data/leader%20board.png)
